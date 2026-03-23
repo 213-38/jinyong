@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>你是金庸哪個俠客？</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1a1208;
+  --paper: #f5f0e8;
+  --gold: #c9972a;
+  --gold-light: #e8c96a;
+  --red: #8b1a1a;
+  --mist: rgba(245,240,232,0.08);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--ink);
+  color: var(--paper);
+  font-family: 'Noto Sans TC', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Ink wash background texture */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 20%, rgba(139,26,26,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 80% 80%, rgba(201,151,42,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 100% 100% at 50% 50%, rgba(30,20,10,0.4) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Decorative vertical lines */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0; left: 50%;
+  width: 1px; height: 100%;
+  background: linear-gradient(to bottom, transparent, rgba(201,151,42,0.15) 20%, rgba(201,151,42,0.15) 80%, transparent);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 420px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== SCREEN: INTRO ===== */
+#screen-intro {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  text-align: center;
+}
+
+.intro-ornament {
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(to right, transparent, var(--gold), transparent);
+  margin: 0 auto 32px;
+}
+
+.intro-club {
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  color: var(--gold);
+  opacity: 0.8;
+  margin-bottom: 24px;
+  font-family: 'Noto Serif TC', serif;
+}
+
+.intro-title {
+  font-family: 'Noto Serif TC', serif;
+  font-weight: 900;
+  font-size: 36px;
+  line-height: 1.3;
+  color: var(--paper);
+  margin-bottom: 8px;
+  text-shadow: 0 2px 20px rgba(201,151,42,0.3);
+}
+
+.intro-title span {
+  color: var(--gold);
+}
+
+.intro-subtitle {
+  font-size: 13px;
+  color: rgba(245,240,232,0.5);
+  margin-bottom: 40px;
+  letter-spacing: 0.05em;
+  line-height: 1.8;
+}
+
+/* Big circular emblem */
+.intro-emblem {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  border: 1px solid rgba(201,151,42,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 40px;
+  position: relative;
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+.intro-emblem::before {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border-radius: 50%;
+  border: 1px solid rgba(201,151,42,0.15);
+}
+.intro-emblem::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, transparent 0%, rgba(201,151,42,0.2) 25%, transparent 50%, rgba(201,151,42,0.1) 75%, transparent 100%);
+  animation: spinSlow 8s linear infinite;
+}
+@keyframes pulseGlow {
+  0%,100% { box-shadow: 0 0 20px rgba(201,151,42,0.1); }
+  50% { box-shadow: 0 0 40px rgba(201,151,42,0.25); }
+}
+@keyframes spinSlow { to { transform: rotate(360deg); } }
+
+.emblem-char {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 64px;
+  font-weight: 900;
+  color: var(--gold);
+  text-shadow: 0 0 30px rgba(201,151,42,0.5);
+  position: relative;
+  z-index: 1;
+}
+
+.start-btn {
+  background: transparent;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  font-family: 'Noto Serif TC', serif;
+  font-size: 15px;
+  letter-spacing: 0.2em;
+  padding: 14px 48px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: color 0.3s;
+}
+.start-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--gold);
+  transform: translateX(-101%);
+  transition: transform 0.35s ease;
+}
+.start-btn:hover { color: var(--ink); }
+.start-btn:hover::before { transform: translateX(0); }
+.start-btn span { position: relative; z-index: 1; }
+
+.intro-hint {
+  margin-top: 20px;
+  font-size: 11px;
+  color: rgba(245,240,232,0.3);
+  letter-spacing: 0.05em;
+}
+
+/* ===== SCREEN: QUIZ ===== */
+#screen-quiz { display: none; flex: 1; flex-direction: column; padding: 0; }
+
+.quiz-header {
+  padding: 32px 24px 20px;
+  border-bottom: 1px solid rgba(201,151,42,0.1);
+}
+
+.progress-track {
+  height: 2px;
+  background: rgba(245,240,232,0.08);
+  margin-bottom: 16px;
+  position: relative;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(to right, var(--red), var(--gold));
+  transition: width 0.5s ease;
+}
+
+.q-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.q-count {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  opacity: 0.7;
+  font-family: 'Noto Serif TC', serif;
+}
+.q-dots {
+  display: flex;
+  gap: 5px;
+}
+.q-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: rgba(245,240,232,0.15);
+  transition: background 0.3s;
+}
+.q-dot.done { background: var(--gold); }
+.q-dot.active { background: var(--red); }
+
+.q-text {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.6;
+  color: var(--paper);
+  padding: 0 24px;
+  margin-bottom: 4px;
+}
+
+.q-deco {
+  padding: 8px 24px 0;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: rgba(201,151,42,0.4);
+  font-family: 'Noto Serif TC', serif;
+}
+
+.opts-wrap {
+  padding: 16px 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.opt-btn {
+  background: rgba(245,240,232,0.04);
+  border: 1px solid rgba(245,240,232,0.1);
+  color: rgba(245,240,232,0.8);
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 13.5px;
+  text-align: left;
+  padding: 14px 18px;
+  cursor: pointer;
+  line-height: 1.6;
+  transition: all 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+.opt-btn::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 0;
+  background: rgba(201,151,42,0.08);
+  transition: width 0.3s;
+}
+.opt-btn:hover {
+  border-color: rgba(201,151,42,0.4);
+  color: var(--paper);
+}
+.opt-btn:hover::before { width: 100%; }
+.opt-btn.selected {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: rgba(201,151,42,0.1);
+}
+.opt-btn.selected::before { width: 100%; }
+
+.quiz-footer {
+  padding: 0 20px 32px;
+}
+.next-btn {
+  width: 100%;
+  background: transparent;
+  border: 1px solid rgba(201,151,42,0.3);
+  color: rgba(201,151,42,0.4);
+  font-family: 'Noto Serif TC', serif;
+  font-size: 13px;
+  letter-spacing: 0.15em;
+  padding: 13px;
+  cursor: not-allowed;
+  transition: all 0.3s;
+}
+.next-btn.ready {
+  border-color: var(--gold);
+  color: var(--gold);
+  cursor: pointer;
+}
+.next-btn.ready:hover {
+  background: rgba(201,151,42,0.1);
+}
+
+/* ===== SCREEN: LOADING ===== */
+#screen-loading {
+  display: none; flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  text-align: center;
+}
+
+.loading-emblem {
+  width: 100px; height: 100px;
+  border-radius: 50%;
+  border: 1px solid rgba(201,151,42,0.3);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 32px;
+  animation: spinSlow 4s linear infinite;
+}
+.loading-char {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 42px;
+  color: var(--gold);
+  animation: spinSlow 4s linear infinite reverse;
+}
+.loading-text {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 16px;
+  color: rgba(245,240,232,0.6);
+  letter-spacing: 0.2em;
+}
+.loading-dots span {
+  animation: blink 1.2s infinite;
+  color: var(--gold);
+}
+.loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+.loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes blink { 0%,80%,100%{opacity:0} 40%{opacity:1} }
+
+/* ===== SCREEN: RESULT ===== */
+#screen-result { display: none; flex: 1; flex-direction: column; }
+
+.result-hero {
+  padding: 40px 24px 32px;
+  text-align: center;
+  border-bottom: 1px solid rgba(201,151,42,0.1);
+  position: relative;
+}
+
+.result-hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(201,151,42,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.result-label {
+  font-size: 10px;
+  letter-spacing: 0.35em;
+  color: rgba(201,151,42,0.6);
+  font-family: 'Noto Serif TC', serif;
+  margin-bottom: 16px;
+}
+
+.result-icon {
+  width: 90px; height: 90px;
+  border-radius: 50%;
+  border: 1px solid rgba(201,151,42,0.4);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 20px;
+  font-size: 40px;
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+.result-name {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 32px;
+  font-weight: 900;
+  color: var(--paper);
+  margin-bottom: 6px;
+}
+
+.result-type {
+  font-size: 12px;
+  color: var(--gold);
+  letter-spacing: 0.15em;
+  background: rgba(201,151,42,0.1);
+  border: 1px solid rgba(201,151,42,0.2);
+  display: inline-block;
+  padding: 4px 16px;
+  margin-bottom: 16px;
+  font-family: 'Noto Serif TC', serif;
+}
+
+.result-desc {
+  font-size: 13.5px;
+  color: rgba(245,240,232,0.65);
+  line-height: 1.9;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+.result-body { padding: 24px 20px 16px; }
+
+.result-section-title {
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  color: rgba(201,151,42,0.5);
+  font-family: 'Noto Serif TC', serif;
+  margin-bottom: 10px;
+}
+
+.result-book-card {
+  border: 1px solid rgba(201,151,42,0.2);
+  padding: 14px 16px;
+  background: rgba(201,151,42,0.04);
+  margin-bottom: 16px;
+}
+.result-book-name {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 6px;
+}
+.result-book-desc {
+  font-size: 12px;
+  color: rgba(245,240,232,0.55);
+  line-height: 1.7;
+}
+
+.result-secondary {
+  border-left: 2px solid rgba(201,151,42,0.3);
+  padding: 10px 14px;
+  margin-bottom: 20px;
+  background: rgba(245,240,232,0.02);
+}
+.result-secondary p {
+  font-size: 12px;
+  color: rgba(245,240,232,0.45);
+  line-height: 1.7;
+}
+.result-secondary strong {
+  color: rgba(201,151,42,0.6);
+  font-weight: 500;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  display: block;
+  margin-bottom: 4px;
+  font-family: 'Noto Serif TC', serif;
+}
+
+.result-tags {
+  display: flex; gap: 6px; flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+.result-tag {
+  font-size: 10px;
+  border: 1px solid rgba(201,151,42,0.25);
+  color: rgba(201,151,42,0.7);
+  padding: 4px 12px;
+  letter-spacing: 0.08em;
+  font-family: 'Noto Serif TC', serif;
+}
+
+.result-actions {
+  display: flex; flex-direction: column; gap: 10px;
+  padding: 0 20px 40px;
+}
+
+.btn-share {
+  background: var(--gold);
+  border: none;
+  color: var(--ink);
+  font-family: 'Noto Serif TC', serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  padding: 15px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.btn-share:hover { opacity: 0.9; }
+
+.btn-retry {
+  background: transparent;
+  border: 1px solid rgba(245,240,232,0.15);
+  color: rgba(245,240,232,0.4);
+  font-family: 'Noto Serif TC', serif;
+  font-size: 12px;
+  letter-spacing: 0.15em;
+  padding: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-retry:hover {
+  border-color: rgba(245,240,232,0.3);
+  color: rgba(245,240,232,0.6);
+}
+
+.ig-cta {
+  text-align: center;
+  padding: 12px 20px 0;
+  font-size: 10px;
+  color: rgba(245,240,232,0.2);
+  letter-spacing: 0.08em;
+}
+
+/* Fade transition */
+.screen { animation: fadeIn 0.4s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Corner decorations */
+.corner-deco {
+  position: fixed;
+  width: 40px; height: 40px;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.25;
+}
+.corner-deco.tl { top: 16px; left: 16px; border-top: 1px solid var(--gold); border-left: 1px solid var(--gold); }
+.corner-deco.tr { top: 16px; right: 16px; border-top: 1px solid var(--gold); border-right: 1px solid var(--gold); }
+.corner-deco.bl { bottom: 16px; left: 16px; border-bottom: 1px solid var(--gold); border-left: 1px solid var(--gold); }
+.corner-deco.br { bottom: 16px; right: 16px; border-bottom: 1px solid var(--gold); border-right: 1px solid var(--gold); }
+</style>
+</head>
+<body>
+
+<div class="corner-deco tl"></div>
+<div class="corner-deco tr"></div>
+<div class="corner-deco bl"></div>
+<div class="corner-deco br"></div>
+
+<div class="container">
+
+  <!-- INTRO -->
+  <div id="screen-intro" class="screen">
+    <div class="intro-ornament"></div>
+    <p class="intro-club">金庸研究社 × 武俠人格測驗</p>
+    <div class="intro-emblem">
+      <span class="emblem-char">俠</span>
+    </div>
+    <h1 class="intro-title">你是金庸<br><span>哪個俠客</span>？</h1>
+    <p class="intro-subtitle">五道情境題<br>不需要讀過金庸，也能找到你的武俠靈魂</p>
+    <button class="start-btn" onclick="startQuiz()"><span>開始測驗</span></button>
+    <p class="intro-hint">約 2 分鐘完成 · 結果可截圖分享</p>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="screen-quiz" class="screen">
+    <div class="quiz-header">
+      <div class="progress-track">
+        <div class="progress-fill" id="prog" style="width:0%"></div>
+      </div>
+      <div class="q-meta">
+        <span class="q-count" id="q-count">第一題</span>
+        <div class="q-dots" id="q-dots"></div>
+      </div>
+    </div>
+    <p class="q-deco" id="q-deco">情境一</p>
+    <p class="q-text" id="q-text"></p>
+    <div class="opts-wrap" id="opts"></div>
+    <div class="quiz-footer">
+      <button class="next-btn" id="next-btn" onclick="nextQ()">下一題</button>
+    </div>
+  </div>
+
+  <!-- LOADING -->
+  <div id="screen-loading" class="screen">
+    <div class="loading-emblem">
+      <span class="loading-char">命</span>
+    </div>
+    <p class="loading-text">江湖正在推算你的命格<span class="loading-dots"><span>．</span><span>．</span><span>．</span></span></p>
+  </div>
+
+  <!-- RESULT -->
+  <div id="screen-result" class="screen">
+    <div class="result-hero">
+      <p class="result-label">你的武俠人格是</p>
+      <div class="result-icon" id="r-icon"></div>
+      <p class="result-name" id="r-name"></p>
+      <span class="result-type" id="r-type"></span>
+      <p class="result-desc" id="r-desc"></p>
+    </div>
+    <div class="result-body">
+      <p class="result-section-title">推薦入坑第一本</p>
+      <div class="result-book-card">
+        <p class="result-book-name" id="r-book"></p>
+        <p class="result-book-desc" id="r-book-desc"></p>
+      </div>
+      <div class="result-secondary" id="r-secondary"></div>
+      <div class="result-tags" id="r-tags"></div>
+    </div>
+    <div class="result-actions">
+      <button class="btn-share" onclick="shareResult()">截圖分享到 IG 限動</button>
+      <button class="btn-retry" onclick="restart()">重新測驗，換個命格</button>
+    </div>
+    <p class="ig-cta">@jinyong_club · 金庸研究社</p>
+  </div>
+
+</div>
+
+<script>
+const decos = ['情境一','情境二','情境三','情境四','情境五'];
+const counters = ['第一題','第二題','第三題','第四題','第五題'];
+
+const questions = [
+  { text: '面對一個強敵，你的第一反應是？', opts: [
+    { text: '先觀察對方，找出弱點再出手', val: 'G' },
+    { text: '直接衝上去，打了再說', val: 'Y' },
+    { text: '想辦法用計謀讓對方自亂陣腳', val: 'H' },
+    { text: '能不打就不打，退一步海闊天空', val: 'L' },
+    { text: '用情義感化對方，化敵為友', val: 'X' },
+    { text: '冷靜分析，讓對方先暴露弱點', val: 'W' },
+    { text: '以一種讓對方看不懂的方式應對', val: 'D' }
+  ]},
+  { text: '朋友向你傾訴煩惱，你通常會？', opts: [
+    { text: '默默聽完，然後提出務實的建議', val: 'G' },
+    { text: '馬上幫他出頭，路見不平就是要管', val: 'Y' },
+    { text: '分析問題來龍去脈，幫他想對策', val: 'H' },
+    { text: '陪他喝酒，感受勝過道理', val: 'L' },
+    { text: '真心陪伴，讓他知道他不孤單', val: 'X' },
+    { text: '傾聽，但最後讓他自己做決定', val: 'W' },
+    { text: '說出別人不敢說的真話，即使刺耳', val: 'D' }
+  ]},
+  { text: '如果你可以學一門武功，你選哪種？', opts: [
+    { text: '剛猛霸道，一招制敵的掌法', val: 'G' },
+    { text: '快如閃電，來去如風的輕功', val: 'Y' },
+    { text: '變化無窮、難以捉摸的奇門武學', val: 'H' },
+    { text: '看似隨性、實則深不可測的無招勝有招', val: 'L' },
+    { text: '能治傷療病、保護所愛之人的內功', val: 'X' },
+    { text: '剛柔並濟、以靜制動的太極心法', val: 'W' },
+    { text: '劍走偏鋒，出其不意、無人能破的怪招', val: 'D' }
+  ]},
+  { text: '你最在乎的事情是？', opts: [
+    { text: '守護家人與承諾，責任重於一切', val: 'G' },
+    { text: '行俠仗義，讓這個世界更公平', val: 'Y' },
+    { text: '追求真相，解開一切謎題', val: 'H' },
+    { text: '自由自在，不被任何人束縛', val: 'L' },
+    { text: '和所愛的人在一起，平淡即是幸福', val: 'X' },
+    { text: '傳承道義，讓後人少走彎路', val: 'W' },
+    { text: '獨自闖出一條別人沒走過的路', val: 'D' }
+  ]},
+  { text: '朋友對你的評價最可能是？', opts: [
+    { text: '「他說到做到，是最可靠的人」', val: 'G' },
+    { text: '「跟他在一起超熱血，有點衝動但真的很義氣」', val: 'Y' },
+    { text: '「他太聰明了，有時候讓人猜不透」', val: 'H' },
+    { text: '「他活得最自在，我很羨慕他」', val: 'L' },
+    { text: '「他對人真的很好，讓人感覺很溫暖」', val: 'X' },
+    { text: '「他是那種你有難第一個想到的人」', val: 'W' },
+    { text: '「他很難懂，但你一旦懂他就佩服得五體投地」', val: 'D' }
+  ]}
+];
+
+const results = {
+  G: { name:'郭靖', icon:'🦅', type:'赤誠俠士', desc:'你重情重義、踏實可靠，雖然不是最聰明的人，但你的堅持與誠信讓所有人信服。不善言辭，但行動永遠勝過千言萬語。', book:'《射鵰英雄傳》', bookDesc:'跟著郭靖從懵懂少年成長為大俠，你會在他身上看見自己最真實的樣子。', secondary:'你和韋小寶都有俠義心腸，但你比他更有原則——這正是你最珍貴之處。', tags:['責任感強','重情重義','成長型人格'] },
+  Y: { name:'楊過', icon:'🌊', type:'傲骨俠客', desc:'你熱血衝動、天賦異稟，不喜歡被規矩束縛。活得轟轟烈烈，對愛情與友情都全力以赴。有時莽撞，但這份勇氣讓你做到別人不敢做的事。', book:'《神鵰俠侶》', bookDesc:'楊過的故事就是打破所有束縛，走出一條沒人走過的路。和你一樣。', secondary:'狄雲（《連城訣》）和你一樣歷盡委屈——但最後都活出了真正的自己。', tags:['天賦型','感情豐沛','特立獨行'] },
+  H: { name:'黃蓉', icon:'🎭', type:'機智謀士', desc:'你聰明靈活、思維跳脫，看問題總能看到別人看不到的角度。有點神秘，讓人捉摸不透，但對真正在乎的人，你會傾盡一切。', book:'《射鵰英雄傳》', bookDesc:'黃蓉是金庸筆下最聰慧的角色，跟著她你會發現：高智商的人，情感也可以同樣深刻。', secondary:'你和黃藥師同樣才氣縱橫——記得別讓聰明變成孤獨的距離。', tags:['高智商','策略思維','神秘感'] },
+  L: { name:'令狐沖', icon:'🍷', type:'灑脫劍客', desc:'你瀟灑不羈、活在當下，比任何人都更懂得享受生命。不在乎名利，只在乎做自己。看似漫不經心，卻有自己的原則底線。', book:'《笑傲江湖》', bookDesc:'令狐沖是金庸寫過最「活著」的角色。這本書讓你重新思考：什麼才叫做真正的自由？', secondary:'段譽（《天龍八部》）和你同樣瀟灑——卻也同樣藏著一顆極深情的心。', tags:['自由精神','活在當下','隨性不羈'] },
+  X: { name:'小龍女', icon:'🌙', type:'純粹赤子', desc:'你溫柔純粹、感情深厚，用最簡單的方式對待這個複雜的世界。看似柔弱，卻有一種讓人無法忽視的力量——你的真誠，是這個世界最稀缺的東西。', book:'《神鵰俠侶》', bookDesc:'小龍女的故事告訴我們：真愛不需要語言，等待本身就是一種偉大。', secondary:'程靈素（《飛狐外傳》）也和你一樣，以最深情的方式守護所愛。', tags:['真誠溫柔','情感深厚','守護型人格'] },
+  W: { name:'張三豐', icon:'☁️', type:'洞見智者', desc:'你沉穩睿智、胸懷寬廣，不爭一時之勝負，眼光放在更長遠的地方。你不是最強的人，但你是最讓人敬重的人。', book:'《倚天屠龍記》', bookDesc:'張三豐活了百歲，見證無數英雄起落。跟著他，你會學到什麼叫做真正的強大。', secondary:'蕭峰（《天龍八部》）和你一樣承擔著旁人難以理解的重量——都選擇了以德服人。', tags:['沉穩睿智','影響力型','長遠眼光'] },
+  D: { name:'黃藥師', icon:'🌊', type:'孤傲奇才', desc:'你才氣縱橫、我行我素，不在乎世俗眼光，活在自己的世界裡。人們不一定懂你，但沒有人能忽視你。你是真正的異類——而這正是你最迷人的地方。', book:'《射鵰英雄傳》', bookDesc:'黃藥師是金庸筆下最複雜的角色之一——亦正亦邪，琴棋書畫無所不精。', secondary:'任我行（《笑傲江湖》）也擁有這種「天下只有我一人」的霸氣——記得留點位置給真正的朋友。', tags:['孤傲不群','多才多藝','超強個人風格'] }
+};
+
+let answers = [], current = 0, selected = null;
+
+function show(id) {
+  ['intro','quiz','loading','result'].forEach(s => {
+    const el = document.getElementById('screen-'+s);
+    el.style.display = (s === id) ? 'flex' : 'none';
+  });
+}
+
+function startQuiz() {
+  answers = []; current = 0; selected = null;
+  buildDots();
+  renderQ();
+  show('quiz');
+}
+
+function buildDots() {
+  const wrap = document.getElementById('q-dots');
+  wrap.innerHTML = '';
+  questions.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'q-dot' + (i === 0 ? ' active' : '');
+    d.id = 'dot-' + i;
+    wrap.appendChild(d);
+  });
+}
+
+function renderQ() {
+  const q = questions[current];
+  document.getElementById('q-count').textContent = counters[current];
+  document.getElementById('q-deco').textContent = decos[current];
+  document.getElementById('q-text').textContent = q.text;
+  document.getElementById('prog').style.width = (current / questions.length * 100) + '%';
+  selected = null;
+  setNextReady(false);
+
+  const wrap = document.getElementById('opts');
+  wrap.innerHTML = '';
+  q.opts.forEach((o, i) => {
+    const b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.textContent = o.text;
+    b.onclick = () => selectOpt(i, o.val);
+    wrap.appendChild(b);
+  });
+
+  document.querySelectorAll('.q-dot').forEach((d, i) => {
+    d.className = 'q-dot' + (i < current ? ' done' : i === current ? ' active' : '');
+  });
+}
+
+function selectOpt(i, val) {
+  document.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+  document.querySelectorAll('.opt-btn')[i].classList.add('selected');
+  selected = val;
+  setNextReady(true);
+}
+
+function setNextReady(ready) {
+  const btn = document.getElementById('next-btn');
+  btn.textContent = (current === questions.length - 1) ? '揭曉命格' : '下一題';
+  btn.className = 'next-btn' + (ready ? ' ready' : '');
+}
+
+function nextQ() {
+  if (!selected) return;
+  answers.push(selected);
+  if (current < questions.length - 1) {
+    current++;
+    renderQ();
+  } else {
+    show('loading');
+    setTimeout(showResult, 2000);
+  }
+}
+
+function showResult() {
+  const counts = {};
+  answers.forEach(a => counts[a] = (counts[a]||0) + 1);
+  const sorted = Object.entries(counts).sort((a,b) => b[1]-a[1]);
+  const key = sorted[0][0];
+  const r = results[key];
+  const key2 = sorted[1] ? sorted[1][0] : null;
+  const r2 = key2 ? results[key2] : null;
+
+  document.getElementById('r-icon').textContent = r.icon;
+  document.getElementById('r-name').textContent = r.name + ' 型';
+  document.getElementById('r-type').textContent = r.type;
+  document.getElementById('r-desc').textContent = r.desc;
+  document.getElementById('r-book').textContent = r.book;
+  document.getElementById('r-book-desc').textContent = r.bookDesc;
+
+  const sec = document.getElementById('r-secondary');
+  if (r2) {
+    sec.innerHTML = `<strong>你也有一點 ${r2.name} 的影子</strong><p>${r.secondary}</p>`;
+    sec.style.display = 'block';
+  } else {
+    sec.style.display = 'none';
+  }
+
+  const tags = document.getElementById('r-tags');
+  tags.innerHTML = r.tags.map(t => `<span class="result-tag">${t}</span>`).join('');
+
+  show('result');
+}
+
+function shareResult() {
+  alert('請截圖此頁面，分享至 IG 限動！\n記得 tag @jinyong_club 讓更多人來玩 ✦');
+}
+
+function restart() {
+  show('intro');
+}
+
+show('intro');
+</script>
+</body>
+</html>
